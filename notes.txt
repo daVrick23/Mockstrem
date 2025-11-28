@@ -1,0 +1,9 @@
+Primary: #3B82F6 (blue-500)
+
+Secondary: #2563EB (blue-600)
+
+Hover: #1D4ED8 (blue-700)
+
+Text: #FFFFFF (oq)
+
+Shadow: rgba(0,0,0,0.2)
