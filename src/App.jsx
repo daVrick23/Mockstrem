@@ -19,6 +19,8 @@ export default function App() {
       easing: "ease", // animatsiya effekti
       once: false,     // scroll qilinganida faqat bir marta animatsiya bo‘lsin
     });
+
+    
   }, []);
 
   return (
@@ -95,7 +97,7 @@ export default function App() {
         </p>
         <div className="flex gap-5">
           <Link
-            to="/get-started"
+            to="/dashboard"
             className="px-8 py-4 bg-white text-blue-600 font-semibold rounded-full shadow-lg transition-all duration-300 hover:scale-105 hover:bg-blue-600 hover:text-white"
           >
             Get Started

@@ -1,5 +1,11 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
+body{
+  overflow-x: hidden;
+}
+
 .nav{
-  background: linear-gradient(to bottom, white, rgba(255, 255, 255, 0));
+  background: linear-gradient(to bottom, white 0%,  rgba(255, 255, 255, 0.512) 70%, rgba(255, 255, 255, 0) 100%);
 }

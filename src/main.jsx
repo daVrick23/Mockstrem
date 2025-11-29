@@ -4,12 +4,16 @@ import './index.css'
 import App from './App.jsx'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Auth from './Auth.jsx'
+import Contact from './Contact.jsx'
+import Dashboard from './Dashboard.jsx'
 
 createRoot(document.getElementById('root')).render(
   <BrowserRouter>
     <Routes>
       <Route path='/' element={<App />}/>
       <Route path='/auth' element={<Auth />}/>
+      <Route path='/contact' element={<Contact />}/>
+      <Route path='/dashboard' element={<Dashboard />}/>
     </Routes>
   </BrowserRouter>
 )
