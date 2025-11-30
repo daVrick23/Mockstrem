@@ -278,7 +278,7 @@ export default function Dashboard() {
                     </Link>
 
                     {/* Account Settings */}
-                    <div className="px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer flex items-center gap-3 group border-t border-gray-100 dark:border-gray-700">
+                    <div onClick={()=>setActive("profile")} className="px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer flex items-center gap-3 group border-t border-gray-100 dark:border-gray-700">
                       <FaLock size={18} className="text-purple-600 dark:text-purple-400 group-hover:scale-110 transition-transform" />
                       <div>
                         <p className="font-semibold text-gray-800 dark:text-white text-sm">🔒 Security</p>
@@ -288,13 +288,13 @@ export default function Dashboard() {
 
                     {/* Admin Panel - Only for Admins */}
                     {isAdmin && (
-                      <div className="px-4 py-3 hover:bg-gradient-to-r hover:from-orange-100 hover:to-red-100 dark:hover:from-orange-900/30 dark:hover:to-red-900/30 transition-colors cursor-pointer flex items-center gap-3 group border-t border-gray-100 dark:border-gray-700">
+                      <Link target="_blank" to="/admin/dashboard" className="px-4 py-3 hover:bg-gradient-to-r hover:from-orange-100 hover:to-red-100 dark:hover:from-orange-900/30 dark:hover:to-red-900/30 transition-colors cursor-pointer flex items-center gap-3 group border-t border-gray-100 dark:border-gray-700">
                         <FaShieldAlt size={18} className="text-orange-600 dark:text-orange-400 group-hover:scale-110 transition-transform" />
                         <div>
                           <p className="font-semibold text-orange-700 dark:text-orange-300 text-sm">⚙️ Admin Panel</p>
                           <p className="text-xs text-orange-600 dark:text-orange-400">Manage system & users</p>
                         </div>
-                      </div>
+                      </Link>
                     )}
 
                     {/* Logout */}

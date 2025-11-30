@@ -8,6 +8,7 @@ import Contact from './Contact.jsx'
 import Dashboard from './Dashboard.jsx'
 import Plan from './Plan.jsx'
 import Writing from './Components/CEFR/Writing.jsx'
+import Dashboard_admin from './Admin/Dashboard.jsx'
 
 createRoot(document.getElementById('root')).render(
   <BrowserRouter>
@@ -18,6 +19,7 @@ createRoot(document.getElementById('root')).render(
       <Route path='/dashboard' element={<Dashboard />}/>
       <Route path='/plans' element={<Plan />}/>
       <Route path='/mock/cefr/writing/:id' element={<Writing />}/>
+      <Route path='/admin/dashboard' element={<Dashboard_admin />}/>
     </Routes>
   </BrowserRouter>
 )
