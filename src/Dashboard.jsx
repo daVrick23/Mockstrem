@@ -4,8 +4,9 @@ import { MdArrowDropDown, MdClose, MdMenu } from "react-icons/md";
 import Main from "./Components/Main";
 import Writing_list from "./Components/CEFR/Writing_list";
 import logo from "./assets/logo.jpg";
-import Profile from "./Components/CEFR/Profile";
+import Profile from "./Components/Profile";
 import { Link } from "react-router-dom";
+import api from "./api";
 
 export default function Dashboard() {
   const [active, setActive] = useState("home");
@@ -16,6 +17,8 @@ export default function Dashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [hoveredMenu, setHoveredMenu] = useState(null);
   const [profileOpen, setProfileOpen] = useState(false);
+  const [user, setUser] = useState(null);
+
   const [isAdmin, setIsAdmin] = useState(true); // Change to false for non-admin users
 
   const toggleTheme = () => {
@@ -27,7 +30,23 @@ export default function Dashboard() {
   useEffect(() => {
     const storedTheme = "light";
     setTheme(storedTheme);
+
+    // USER MA'LUMOTINI OLIB KELISH
+    const fetchUser = async () => {
+      try {
+        const res = await api.get("/user/me");
+        const data = res.data;
+
+        setUser(data);
+        setIsAdmin(data.role === "admin");
+      } catch (error) {
+        console.error("Error fetching user:", error);
+      }
+    };
+
+    fetchUser();
   }, []);
+
 
   const menuItems = [
     { name: "Home", icon: <FaHome size={20} /> },
@@ -122,20 +141,20 @@ export default function Dashboard() {
                       <span className="font-medium">{theme === "light" ? "Dark Mode" : "Light Mode"}</span>
                     </div>
                   ) : (
-                    
-                      item.dropdown.map((sub, i) => (
-                        <div
-                          key={i}
-                          className="py-3 px-6 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-colors duration-200 cursor-pointer font-medium text-sm whitespace-nowrap border-b border-gray-100 dark:border-gray-700 last:border-b-0"
-                          onClick={() => {
-                            setActive(`${item.name.toLowerCase()}_${sub.toLowerCase()}`);
-                            item.setOpen(false); // optional: popupni yopish uchun
-                          }}
-                        >
-                          {sub}
-                        </div>
-                      ))
-                    
+
+                    item.dropdown.map((sub, i) => (
+                      <div
+                        key={i}
+                        className="py-3 px-6 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-colors duration-200 cursor-pointer font-medium text-sm whitespace-nowrap border-b border-gray-100 dark:border-gray-700 last:border-b-0"
+                        onClick={() => {
+                          setActive(`${item.name.toLowerCase()}_${sub.toLowerCase()}`);
+                          item.setOpen(false); // optional: popupni yopish uchun
+                        }}
+                      >
+                        {sub}
+                      </div>
+                    ))
+
 
 
                   )}
@@ -158,7 +177,7 @@ export default function Dashboard() {
                       item.dropdown.map((sub, i) => (
                         <div
                           key={i}
-                          onClick={()=>{setActive(`${item.name.toLowerCase()}_${sub.toLowerCase()}`)}}
+                          onClick={() => { setActive(`${item.name.toLowerCase()}_${sub.toLowerCase()}`) }}
                           className="py-3 px-6 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-colors duration-200 cursor-pointer font-medium text-sm whitespace-nowrap border-b border-gray-100 dark:border-gray-700 last:border-b-0"
                         >
                           {sub}
@@ -225,13 +244,18 @@ export default function Dashboard() {
                 className="flex items-center gap-3 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-2 rounded-lg transition-all duration-200"
               >
                 <img
-                  src="https://i.pravatar.cc/150?img=1"
+                  src="https://i.pravatar.cc/150?u=${user?.id}"
                   alt="User"
-                  className="w-10 h-10 rounded-full border-2 border-blue-500 dark:border-blue-400 shadow-md hover:scale-110 transition-transform duration-200"
+                  className="w-12 h-12 rounded-full border-2 border-blue-500"
                 />
                 <div className="hidden sm:block">
-                  <p className="font-semibold text-gray-900 dark:text-white text-sm">John Doe</p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">{isAdmin ? "Admin" : "Premium Member"}</p>
+
+                  <p className="font-bold text-gray-900 dark:text-white">
+                    {user?.username}
+                  </p>
+                  <p className="text-xs text-gray-600 dark:text-gray-300">
+                    {user?.email}
+                  </p>
                 </div>
               </div>
 
@@ -278,7 +302,7 @@ export default function Dashboard() {
                     </Link>
 
                     {/* Account Settings */}
-                    <div onClick={()=>setActive("profile")} className="px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer flex items-center gap-3 group border-t border-gray-100 dark:border-gray-700">
+                    <div onClick={() => setActive("profile")} className="px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer flex items-center gap-3 group border-t border-gray-100 dark:border-gray-700">
                       <FaLock size={18} className="text-purple-600 dark:text-purple-400 group-hover:scale-110 transition-transform" />
                       <div>
                         <p className="font-semibold text-gray-800 dark:text-white text-sm">🔒 Security</p>

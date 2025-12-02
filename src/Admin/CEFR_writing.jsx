@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaEdit, FaTrash, FaPlus } from "react-icons/fa";
+import { RiReceiptFill } from "react-icons/ri";
 import { Link } from "react-router-dom";
+import api from "../api";
 
 export default function CEFR_Writing() {
   const [writings, setWritings] = useState([
@@ -28,6 +30,10 @@ export default function CEFR_Writing() {
     setWritings(writings.filter((w) => w.id !== id));
   };
 
+  useEffect(()=>{
+    api.get("")
+  },[])
+
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-6">CEFR Writing</h1>
@@ -36,12 +42,20 @@ export default function CEFR_Writing() {
       <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow mb-6">
         <h2 className="text-lg font-semibold mb-3">Create New Writing</h2>
 
-        <div className="flex gap-3">    
+        <div className="flex gap-3">
           <Link to="/mock/cefr/writing/form"
             onClick={addWriting}
             className="px-4 bg-blue-600 text-white rounded-lg flex items-center gap-2"
           >
             <FaPlus /> Add
+          </Link>
+
+          <Link to="/mock/cefr/writing/check-list"
+            target="_blank"
+            onClick={addWriting}
+            className="px-4 bg-blue-600 text-white rounded-lg flex items-center gap-2"
+          >
+            <RiReceiptFill /> Check mocks
           </Link>
         </div>
       </div>
