@@ -93,11 +93,12 @@ export default function WritingMocks() {
         task2: feedbacks.task2
       },
       submitted_at: new Date().toISOString(),
-      send_email: selected.badge === "premium" ? document.querySelector('input[type="checkbox"]')?.checked : false
+      send_email: document.querySelector('input[type="checkbox"]')?.checked
     };
 
+    
     try {
-      const response = await api.post(`/mock/writing/check/${id}`, { result: reviewData });
+      const response = await api.post(`/mock/writing/check/${id}`, { result: reviewData }).then(res=>console.log(res));
       alert("Review submitted successfully!");
       setSelected(null);
       setScores({ task11: 0, task12: 0, task2: 0 });
