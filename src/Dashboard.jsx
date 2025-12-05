@@ -5,7 +5,7 @@ import Main from "./Components/Main";
 import Writing_list from "./Components/CEFR/Writing_list";
 import logo from "./assets/logo.jpg";
 import Profile from "./Components/Profile";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import api from "./api";
 
 export default function Dashboard() {
@@ -18,6 +18,7 @@ export default function Dashboard() {
   const [hoveredMenu, setHoveredMenu] = useState(null);
   const [profileOpen, setProfileOpen] = useState(false);
   const [user, setUser] = useState(null);
+  const nav = useNavigate();
 
   const [isAdmin, setIsAdmin] = useState(true); // Change to false for non-admin users
 
@@ -199,7 +200,7 @@ export default function Dashboard() {
 
           {/* Logout Tooltip */}
           {!sidebarOpen && (
-            <div className="absolute left-28 bottom-1/2 transform translate-y-1/2 opacity-0 invisible group-hover/logout-btn:opacity-100 group-hover/logout-btn:visible transition-all duration-200 z-50 pointer-events-none">
+            <div onClick={()=>{localStorage.removeItem("acces_token"); nav("/auth")}} className="absolute left-28 bottom-1/2 transform translate-y-1/2 opacity-0 invisible group-hover/logout-btn:opacity-100 group-hover/logout-btn:visible transition-all duration-200 z-50 pointer-events-none">
               <div className="bg-gradient-to-r from-red-600 to-pink-600 text-white px-4 py-2 rounded-lg font-semibold text-sm shadow-2xl whitespace-nowrap relative">
                 Log Out
                 <div className="absolute right-full top-1/2 transform -translate-y-1/2 w-2 h-2 bg-gradient-to-r from-red-600 to-pink-600 rotate-45 -mr-1"></div>

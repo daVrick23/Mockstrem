@@ -11,11 +11,14 @@ import {
 } from "react-icons/fa";
 import { MdClose, MdMenu, MdArrowDropDown } from "react-icons/md";
 import CEFR_Writing from "./CEFR_writing";
+import Users from "./Users";
+import { useNavigate } from "react-router-dom";
 
 export default function Dashboard_admin() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [dropdownOpen, setDropdownOpen] = useState(null);
   const [activeMenu, setActiveMenu] = useState("Dashboard");
+  const nav = useNavigate();
 
   const menuItems = [
     {
@@ -41,7 +44,8 @@ export default function Dashboard_admin() {
   const toggleDropdown = (name) => {
     setDropdownOpen(dropdownOpen === name ? null : name);
   };
-
+  console.log(activeMenu);
+  
   return (
     <div className="flex h-screen bg-gray-100 dark:bg-gray-900">
       {/* Sidebar */}
@@ -114,7 +118,7 @@ export default function Dashboard_admin() {
 
         {/* Logout */}
         <div className="absolute bottom-0 w-full p-4 border-t border-gray-700">
-          <div className="flex items-center gap-3 hover:bg-red-600 p-3 rounded-lg cursor-pointer">
+          <div onClick={()=>{localStorage.removeItem("acces_token"); nav("/auth")}} className="flex items-center gap-3 hover:bg-red-600 p-3 rounded-lg cursor-pointer">
             <FaSignOutAlt size={20} />
             {sidebarOpen && <span>Logout</span>}
           </div>
@@ -124,6 +128,7 @@ export default function Dashboard_admin() {
       {/* Main */}
       <div className="flex-1 ml-20 md:ml-0 p-6 overflow-auto">
         {activeMenu === "cefr_writing" && <CEFR_Writing />}
+        {activeMenu === "Users" && <Users />}
       </div>
     </div>
   );
