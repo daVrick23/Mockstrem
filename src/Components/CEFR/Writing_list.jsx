@@ -4,9 +4,11 @@ import { useState, useEffect } from "react"
 import { FaRandom, FaCrown } from "react-icons/fa"
 import { FiFilter } from "react-icons/fi"
 import { MdClose } from "react-icons/md"
+import { useNavigate } from "react-router-dom"
 import api from "../../api"
 
-export default function WritingList() {
+export default function WritingList({ isPremium = false }) {
+  const navigate = useNavigate()
   const [mockData, setMockData] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -14,7 +16,7 @@ export default function WritingList() {
   const [mockModalOpen, setMockModalOpen] = useState(false)
   const [selectedTaskId, setSelectedTaskId] = useState(null)
   const [selectedPart, setSelectedPart] = useState(null)
-  const [userPremium, setUserPremium] = useState(false)
+  const [userPremium, setUserPremium] = useState(isPremium)
   const [filters, setFilters] = useState({
     solved: false,
     unsolved: false,
@@ -282,7 +284,6 @@ export default function WritingList() {
 
       {mockModalOpen && selectedTask && (
         <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[999] w-full max-w-2xl max-h-[90vh] bg-white dark:bg-gray-800 rounded-2xl shadow-2xl overflow-hidden flex flex-col animate-in fade-in zoom-in-95 duration-300">
-          {!userPremium && (
             <div className="bg-gradient-to-r from-purple-500 to-pink-500 text-white p-4 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <FaCrown size={20} />
@@ -291,16 +292,14 @@ export default function WritingList() {
                   <p className="text-xs text-white/90">Premium feature - Complete all parts with instant feedback</p>
                 </div>
               </div>
-              <a
-                href={`/mock/cefr/writing/${selectedTask.id}?part=all`}
-                target="_blank"
-                rel="noopener noreferrer"
+              <button
+                onClick={() => navigate(!isPremium ? '/plans' : `/mock/cefr/writing/${selectedTask.id}?part=all`)}
                 className="px-4 py-2 bg-white text-purple-600 font-bold rounded-lg hover:bg-gray-100 transition-all transform hover:scale-105 cursor-pointer"
               >
                 Try Full Mock
-              </a>
+              </button>
             </div>
-          )}
+
 
           <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
             <div>
@@ -416,6 +415,8 @@ export default function WritingList() {
           </div>
         </div>
       )}
+
+      {/* Premium Guard Modal */}
 
       <style jsx>{`
         @keyframes slideInFromTop {

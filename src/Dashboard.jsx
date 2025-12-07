@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FaHome, FaUser, FaCog, FaSignOutAlt, FaGlobe, FaBell, FaSearch, FaUserCircle, FaShieldAlt, FaCreditCard, FaHeart, FaLock } from "react-icons/fa";
+import { FaHome, FaUser, FaCog, FaSignOutAlt, FaGlobe, FaBell, FaSearch, FaUserCircle, FaShieldAlt, FaCreditCard, FaHeart, FaLock, FaCrown } from "react-icons/fa";
 import { MdArrowDropDown, MdClose, MdMenu } from "react-icons/md";
 import Main from "./Components/Main";
 import Writing_list from "./Components/CEFR/Writing_list";
@@ -18,8 +18,14 @@ export default function Dashboard() {
   const [hoveredMenu, setHoveredMenu] = useState(null);
   const [profileOpen, setProfileOpen] = useState(false);
   const [user, setUser] = useState(null);
-
   const [isAdmin, setIsAdmin] = useState(true); // Change to false for non-admin users
+  const [isPremium, setIsPremium] = useState(false);
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const [notifications, setNotifications] = useState([
+    { id: 1, title: "Exam Result", message: "Your CEFR Writing exam has been graded", time: "2 hours ago", read: false },
+    { id: 2, title: "New Feature", message: "Check out our new AI feedback system", time: "1 day ago", read: false },
+    { id: 3, title: "Premium Expired", message: "Your premium subscription will expire in 7 days", time: "3 days ago", read: true },
+  ]);
 
   const toggleTheme = () => {
     const newTheme = theme === "light" ? "dark" : "light";
@@ -39,6 +45,10 @@ export default function Dashboard() {
 
         setUser(data);
         setIsAdmin(data.role === "admin");
+        
+        // Check premium status: if premium_duration exists and is in future
+        const isPremiumUser = data.premium_duration && new Date(data.premium_duration) > new Date();
+        setIsPremium(isPremiumUser);
       } catch (error) {
         console.error("Error fetching user:", error);
       }
@@ -49,13 +59,14 @@ export default function Dashboard() {
 
 
   const menuItems = [
-    { name: "Home", icon: <FaHome size={20} /> },
+    { name: "Home", icon: <FaHome size={20} />, premium: false },
     {
       name: "IELTS",
       icon: <FaGlobe size={20} />,
       dropdown: ["Writing", "Listening", "Speaking", "Reading"],
       open: ieltsOpen,
       setOpen: setIeltsOpen,
+      premium: false,
     },
     {
       name: "CEFR",
@@ -63,6 +74,7 @@ export default function Dashboard() {
       dropdown: ["Writing", "Listening", "Speaking", "Reading"],
       open: cefrOpen,
       setOpen: setCefrOpen,
+      premium: false,
     },
     {
       name: "Settings",
@@ -70,6 +82,7 @@ export default function Dashboard() {
       dropdown: ["Change Mode"],
       open: settingsOpen,
       setOpen: setSettingsOpen,
+      premium: false,
     },
   ];
 
@@ -95,8 +108,17 @@ export default function Dashboard() {
           {menuItems.map((item, idx) => (
             <div key={idx} className="relative group">
               <div
-                className="flex items-center gap-4 px-4 py-3 cursor-pointer rounded-lg transition-all duration-200 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600 group/item relative"
+                className={`flex items-center gap-4 px-4 py-3 cursor-pointer rounded-lg transition-all duration-200 group/item relative ${
+                  item.premium && !isPremium
+                    ? "opacity-60 hover:bg-red-50 dark:hover:bg-red-900/20"
+                    : "hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-600"
+                }`}
                 onClick={() => {
+                  // Check premium requirement
+                  if (item.premium && !isPremium) {
+                    alert("This feature requires a Premium subscription. Please upgrade to access it.");
+                    return;
+                  }
                   if (item.setOpen) item.setOpen(!item.open);
                   setHoveredMenu(item.name);
 
@@ -105,13 +127,13 @@ export default function Dashboard() {
                     setActive("home");
                   }
                 }}
-
-                onMouseEnter={() => setHoveredMenu(item.name)}
-                onMouseLeave={() => setHoveredMenu(null)}
               >
-                <div className="text-blue-600 dark:text-blue-400 group-hover/item:scale-110 transition-transform duration-200">
+                <div className={`group-hover/item:scale-110 transition-transform duration-200 ${item.premium && !isPremium ? "text-red-400" : "text-blue-600 dark:text-blue-400"}`}>
                   {item.icon}
                 </div>
+                {item.premium && !isPremium && (
+                  <FaCrown className="text-yellow-500 text-sm ml-auto" title="Premium feature" />
+                )}
                 {item.dropdown && sidebarOpen && (
                   <MdArrowDropDown
                     className={`transition-transform duration-300 text-gray-600 dark:text-gray-400 ${item.open ? "rotate-180" : ""}`}
@@ -232,10 +254,73 @@ export default function Dashboard() {
             </div>
           </div>
           <div className="flex items-center gap-6">
-            <button className="relative p-2 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200">
-              <FaBell size={20} />
-              <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 rounded-full animate-pulse"></span>
-            </button>
+            <div className="relative">
+              <button 
+                onClick={() => setNotificationsOpen(!notificationsOpen)}
+                className="relative p-2 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200"
+              >
+                <FaBell size={20} />
+                {notifications.some(n => !n.read) && (
+                  <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 rounded-full animate-pulse"></span>
+                )}
+              </button>
+
+              {/* Notifications Dropdown */}
+              {notificationsOpen && (
+                <div className="absolute right-0 top-full mt-2 w-80 bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 z-50 animate-in fade-in slide-in-from-top-2 duration-200 max-h-96 overflow-hidden flex flex-col">
+                  {/* Header */}
+                  <div className="p-4 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-gray-700 dark:to-gray-600">
+                    <div className="flex items-center justify-between">
+                      <h3 className="font-bold text-gray-900 dark:text-white">Notifications</h3>
+                      <button
+                        onClick={() => setNotificationsOpen(false)}
+                        className="p-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition-colors"
+                      >
+                        <MdClose size={20} className="text-gray-600 dark:text-gray-300" />
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Notifications List */}
+                  <div className="overflow-y-auto flex-1">
+                    {notifications.length > 0 ? (
+                      notifications.map((notif) => (
+                        <div
+                          key={notif.id}
+                          className={`p-4 border-b border-gray-100 dark:border-gray-700 last:border-b-0 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer ${
+                            !notif.read ? "bg-blue-50 dark:bg-blue-900/20" : ""
+                          }`}
+                        >
+                          <div className="flex items-start justify-between gap-3">
+                            <div className="flex-1">
+                              <p className="font-semibold text-gray-900 dark:text-white text-sm">{notif.title}</p>
+                              <p className="text-gray-600 dark:text-gray-400 text-xs mt-1">{notif.message}</p>
+                              <p className="text-gray-500 dark:text-gray-500 text-xs mt-2">{notif.time}</p>
+                            </div>
+                            {!notif.read && (
+                              <div className="w-2 h-2 bg-blue-500 rounded-full mt-1.5 flex-shrink-0"></div>
+                            )}
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="p-8 text-center text-gray-500 dark:text-gray-400">
+                        <p className="text-sm">No notifications</p>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Footer */}
+                  {notifications.length > 0 && (
+                    <div className="p-3 border-t border-gray-200 dark:border-gray-700 text-center">
+                      <button className="text-sm text-blue-600 dark:text-blue-400 hover:underline font-semibold">
+                        View All Notifications
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
 
             {/* Profile Dropdown */}
             <div className="flex items-center gap-3 pl-6 border-l border-gray-200 dark:border-gray-700 relative">
@@ -341,7 +426,7 @@ export default function Dashboard() {
 
           {active === "home" && <Main />}
 
-          {active === "cefr_writing" && <Writing_list />}
+          {active === "cefr_writing" && <Writing_list isPremium={isPremium} />}
           {active === "cefr_listening" && <div>CEFR Listening</div>}
           {active === "cefr_reading" && <div>CEFR Reading</div>}
           {active === "cefr_speaking" && <div>CEFR Speaking</div>}
@@ -357,11 +442,14 @@ export default function Dashboard() {
 
       </div>
 
-      {/* Click outside to close profile dropdown */}
-      {profileOpen && (
+      {/* Click outside to close profile dropdown and notifications */}
+      {(profileOpen || notificationsOpen) && (
         <div
           className="fixed inset-0 z-40"
-          onClick={() => setProfileOpen(false)}
+          onClick={() => {
+            setProfileOpen(false);
+            setNotificationsOpen(false);
+          }}
         />
       )}
     </div>
