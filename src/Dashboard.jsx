@@ -7,6 +7,7 @@ import logo from "./assets/logo.jpg";
 import Profile from "./Components/Profile";
 import { Link, useNavigate } from "react-router-dom";
 import api from "./api";
+import { User } from "lucide-react";
 
 // Vaqtni "X minutes ago" formatiga o'tkazish
 const formatTimeAgo = (dateString) => {
@@ -122,8 +123,8 @@ export default function Dashboard() {
 
   const goto = (data) => {
 
-    api.put(`/notifications/${data.id}`, { title: data.title, body: data.body, is_read: true }).then(res=>{   
-    }).catch(err=>{
+    api.put(`/notifications/${data.id}`, { title: data.title, body: data.body, is_read: true }).then(res => {
+    }).catch(err => {
     })
     if (data.title == "Writing mock results") {
       const id = data.body.split(" ")[2].split("")[1];
@@ -375,11 +376,12 @@ export default function Dashboard() {
                 onClick={() => setProfileOpen(!profileOpen)}
                 className="flex items-center gap-3 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-2 rounded-lg transition-all duration-200"
               >
-                <img
+                {/* <img
                   src="https://i.pravatar.cc/150?u=${user?.id}"
                   alt="User"
                   className="w-12 h-12 rounded-full border-2 border-blue-500"
-                />
+                /> */}
+                <User className="rounded-full border-2 text-xl w-10 h-10 p-1 border-blue-500 text-blue-500" />
                 <div className="hidden sm:block">
 
                   <p className="font-bold text-gray-900 dark:text-white">
@@ -397,11 +399,13 @@ export default function Dashboard() {
                   {/* Header */}
                   <div className="p-4 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-gray-700 dark:to-gray-600">
                     <div className="flex items-center gap-3">
-                      <img
+                      {/* <img
                         src="https://i.pravatar.cc/150?img=1"
                         alt="User"
                         className="w-12 h-12 rounded-full border-2 border-blue-500"
-                      />
+                      /> */}
+                      <User className="rounded-full border-2 text-xl w-10 h-10 p-1 border-blue-500 text-blue-500" />
+
                       <div>
                         <p className="font-bold text-gray-900 dark:text-white">{user.username}</p>
                         <p className="text-xs text-gray-600 dark:text-gray-300">{user.email}</p>

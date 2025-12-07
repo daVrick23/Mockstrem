@@ -33,6 +33,7 @@ export default function Auth() {
         localStorage.setItem("refresh_token", res.data.refresh_token);
 
         nav("/dashboard");
+        
       } 
       
       else {
