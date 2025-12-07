@@ -24,7 +24,7 @@ export default function App() {
   }, []);
 
   return (
-    <div className='w-full h-screen flex flex-col bg-slate-200 relative'>
+    <div className='w-full h-screen flex flex-col bg-slate-200 relative overflow-x-hidden'>
       <div className="nav w-full h-max py-3 flex items-center justify-center fixed top-0 z-[999]">
         <ul className="nav-items flex items-center justify-center gap-5 text-slate-800">
           <li className="nav-item text-2xl font-semibold cursor-pointer"><a href="#">Main</a></li>

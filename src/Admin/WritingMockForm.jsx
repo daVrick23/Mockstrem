@@ -60,7 +60,7 @@ export default function WritingMockForm() {
     };
 
     return (
-        <div className="p-6 max-w-3xl mx-auto">
+        <div className="p-6 max-w-3xl mx-auto bg-white">
             <h1 className="text-2xl font-bold mb-4">
                 {edit ? "Edit Writing Mock" : "Create Writing Mock"}
             </h1>
