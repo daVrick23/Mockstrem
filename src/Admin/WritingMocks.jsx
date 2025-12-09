@@ -25,39 +25,51 @@ export default function WritingMocks() {
     task2: ""
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isMockLoading, setIsMockLoading] = useState(false); // <-- add this
 
   useEffect(() => {
     api.get("/mock/writing/results").then(res => {
       setMOCK(res.data);
-      api.get(`/mock/writing/mock/${res.data[0].mock_id}`).then(res => {
-        setMockData(res.data);
-      }).catch(err => {
-        console.log(err);
-      })
-
+      console.log("loaded results:", res.data.length);
     }).catch(err => {
       console.log(err);
       alert("Error in getting results. (See console)")
     })
-
+ 
     api.get("/user/users").then(res => {
       setUsers(res.data);
     }).catch(err => {
       alert("Error! (See console.)")
     })
   }, [])
-
+ 
+  // Fetch single mock by id (called when opening Review modal)
+  const fetchMock = async (mockId) => {
+    try {
+      setIsMockLoading(true); // <-- set to true
+      const res = await api.get(`/mock/writing/mock/${mockId}`)
+      setMockData(res.data)
+    } catch (err) {
+      console.error("Error fetching mock:", err)
+      alert("Error loading mock. See console.")
+    } finally {
+      setIsMockLoading(false); // <-- set to false
+    }
+  }
+ 
   const updateScore = (field, value) => {
     const v = Number(value);
     const newScores = { ...scores, [field]: v };
     setScores(newScores);
 
-    // Auto band calculation (example rule)
+    // Auto band calculation
+    // Task 1.1: max 5, Task 1.2: max 5, Task 2: max 6
+    // Total max: 16
     const total = newScores.task11 + newScores.task12 + newScores.task2;
 
-    if (total <= 7) setBand("B1");
-    else if (total <= 12) setBand("B2");
-    else if (total <= 16) setBand("C1");
+    if (total <= 5) setBand("B1");
+    else if (total <= 10) setBand("B2");
+    else if (total <= 13) setBand("C1");
     else setBand("C2");
   };
 
@@ -126,7 +138,7 @@ export default function WritingMocks() {
     })
   };
 
-  if (!users || !MOCK || !mockData) {
+  if (!users || !MOCK) {
     return (
       <div>Please wait...</div>
     )
@@ -210,10 +222,12 @@ export default function WritingMocks() {
                 <td className="px-4 py-4 text-right">
                   <button
                     onClick={() => {
+                      // open modal and load corresponding mock
                       setSelected(u);
                       setScores({ task11: 0, task12: 0, task2: 0 });
                       setBand("");
                       setFeedbacks({ task11: "", task12: "", task2: "" });
+                      fetchMock(u.mock_id);
                     }}
                     className="px-3 py-1 bg-rose-600 text-white rounded text-sm"
                   >
@@ -242,6 +256,17 @@ export default function WritingMocks() {
               {new Date(selected.created_at).toLocaleString()}
             </div>
 
+            {/* LOADING INDICATOR */}
+            {isMockLoading && (
+              <div className="text-center py-6">
+                <div className="inline-block w-6 h-6 rounded-full border-2 border-gray-300 border-t-rose-600 animate-spin"></div>
+                <p className="text-sm text-gray-500 mt-2">Loading mock...</p>
+              </div>
+            )}
+
+            {/* CONTENT — only render if mockData loaded */}
+            {mockData && !isMockLoading && (
+              <>
             {/* TASK 1.1 */}
             <section className="mb-6">
               <h3 className="font-medium mb-2">Task 1.1</h3>
@@ -297,8 +322,8 @@ export default function WritingMocks() {
               <input
                 type="number"
                 min="0"
-                max="6"
-                placeholder="Score (0–6)"
+                max="5"
+                placeholder="Score (0–5)"
                 value={scores.task12 || ""}
                 className="px-3 py-2 border rounded w-32 mb-3"
                 onChange={(e) => updateScore("task12", e.target.value)}
@@ -394,6 +419,8 @@ export default function WritingMocks() {
                 {isSubmitting ? "Submitting..." : "Submit Review"}
               </button>
             </div>
+              </>
+            )}
           </div>
         </div>
       )}
