@@ -83,7 +83,7 @@ export default function Users() {
       </div>
 
       {/* Users Table */}
-      <div className="bg-white rounded-lg shadow overflow-hidden">
+      <div className="bg-white rounded-lg shadow">
         <table className="w-full">
           <thead className="bg-slate-50 border-b border-slate-200">
             <tr>
