@@ -9,6 +9,7 @@ import { Link, useNavigate } from "react-router-dom";
 import api from "./api";
 import { User } from "lucide-react";
 import Reading_list from "./Components/CEFR/Reading_list";
+import Speaking_list from "./Components/CEFR/Speaking_list";
 
 // Vaqtni "X minutes ago" formatiga o'tkazish
 const formatTimeAgo = (dateString) => {
@@ -483,7 +484,7 @@ export default function Dashboard() {
           {active === "cefr_writing" && <Writing_list isPremium={isPremium} />}
           {active === "cefr_listening" && <div>CEFR Listening</div>}
           {active === "cefr_reading" && <Reading_list isPremium={isPremium}/>}
-          {active === "cefr_speaking" && <div>CEFR Speaking</div>}
+          {active === "cefr_speaking" && <Speaking_list isPremium={isPremium}/>}
 
           {active === "ielts_writing" && <div>IELTS Writing</div>}
           {active === "ielts_listening" && <div>IELTS Listening</div>}

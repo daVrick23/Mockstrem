@@ -121,3 +121,7 @@ body{
 .ProseMirror s {
   text-decoration: line-through;
 }
+
+.disclaimer-rules li{
+  list-style-type: disc;
+}
