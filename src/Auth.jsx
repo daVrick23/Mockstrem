@@ -7,6 +7,7 @@ export default function Auth() {
   const [isRegister, setIsRegister] = useState(false);
   const [isForgot, setIsForgot] = useState(false);
   const [errM, setErrM] = useState();
+  const [loading, setLoading] = useState(false);
 
   // Auth states
   const [username, setUsername] = useState("");
@@ -16,9 +17,10 @@ export default function Auth() {
   // ============================================
   // AUTH SUBMIT — BACKENDGA ULANGAN QISMI
   // ============================================
-  const handleSubmit = async (e) => {
+const handleSubmit = async (e) => {
     e.preventDefault();
     setErrM(null);
+    setLoading(true); // <-- loading boshlandi
 
     try {
       if (isRegister) {
@@ -51,6 +53,8 @@ export default function Auth() {
     } catch (err) {
       console.log(err);
       setErrM(err.response?.data?.detail || "Something went wrong.");
+    } finally {
+      setLoading(false); // <-- har doim loading false qilinadi
     }
   };
 
@@ -232,9 +236,11 @@ export default function Auth() {
             />
 
             <button
+              
               type="submit"
-              className="px-4 py-3 bg-blue-500 text-white rounded-xl"
+              className={`px-4 py-3 bg-blue-500 text-white rounded-xl ${loading? "opacity-50" : null} flex items-center justify-center gap-5`}
             >
+              {loading? <div className={`w-5 h-5 rounded-full border-2 border-white border-b-0 border-l-0 animate-spin`}></div> : null}
               {isRegister ? "Sign Up" : "Sign In"}
             </button>
           </form>

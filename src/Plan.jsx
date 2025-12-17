@@ -1,9 +1,11 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { FaCheck, FaCrown, FaGift } from 'react-icons/fa'
 import { MdClose } from 'react-icons/md'
+import api from './api'
 
 export default function Plan() {
   const [billingPeriod, setBillingPeriod] = useState('monthly')
+  const [user,setUser] = useState();
 
   const features = [
     {
@@ -92,10 +94,18 @@ export default function Plan() {
     }
   ]
 
+  useEffect(()=>{
+    api.get("/user/me").then(res=>{
+      setUser(res.data);
+    }).catch(err=>{
+      console.log(err);
+    })
+  },[])
+
   const handleSendRequestForSubscription = () =>{
     // Telegram link - @DavirbekKhasanov
     const telegramUsername = 'DavirbekKhasanov'
-    const message = 'Salom! Men Premium subscription qilmoqchiman.'
+    const message = `Salom! Men Premium subscription qilmoqchiman. ID = ${user.id}`
     const telegramLink = `https://t.me/${telegramUsername}?text=${encodeURIComponent(message)}`
     window.open(telegramLink, '_blank')
   }

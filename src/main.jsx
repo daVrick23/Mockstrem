@@ -13,6 +13,9 @@ import WritingMockForm from './Admin/WritingMockForm.jsx'
 import WritingMocks from './Admin/WritingMocks.jsx'
 import MockResult from './Components/MockResult.jsx'
 import News from './Components/News.jsx'
+import ReadingMockForm from './Admin/ReadingMockForm.jsx'
+import ReadingExamInterface from './Components/CEFR/Reading.jsx'
+import Speaking from './Components/CEFR/Speaking.jsx'
 
 createRoot(document.getElementById('root')).render(
   <BrowserRouter>
@@ -28,6 +31,9 @@ createRoot(document.getElementById('root')).render(
       <Route path='/mock/cefr/writing/form' element={<WritingMockForm />}/>
       <Route path='/mock/cefr/writing/form/:id' element={<WritingMockForm />}/>
       <Route path='/mock/cefr/writing/check-list' element={<WritingMocks />}/>
+      <Route path='/mock/cefr/reading/form' element={<ReadingMockForm />}/>
+      <Route path='/mock/cefr/reading/:id' element={<ReadingExamInterface />}/>
+      <Route path='/mock/cefr/speaking/:id' element={<Speaking />}/>
       <Route path='/news/:slug' element={<News />}/>
     </Routes>
   </BrowserRouter>
